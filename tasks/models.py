@@ -22,7 +22,7 @@ class Task(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField(max_length=255, null=True, blank=True)
     at_created = models.DateTimeField(auto_now_add=True)
-    tags = models.ManyToManyField(Tag, null=True, blank=True)
+    tags = models.ManyToManyField(Tag)
     is_done = models.BooleanField(default=False)
 
     def __str__(self):
