@@ -1,0 +1,44 @@
+<div class="card" style="width: 22rem;">
+  <div class="card-body">
+    <h2 class="card-title">{{ task.name }}
+      {% if task.is_done %}
+        <span style="color: #00BB33">Done</span>
+      {% else %}
+        <span style="color: #FF0000">Not done</span>
+      {% endif %}
+    </h2>
+    <p class="card-text">{{ task.description }}</p>
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <strong>Created:</strong> {{ task.at_created|date:"Y, F j H:i" }}
+    </li>
+    <li class="list-group-item">
+      <strong>Deadline:</strong> {{ task.deadline|date:"Y, F j H:i" }}
+    </li>
+    <li class="list-group-item">
+      <strong>Tags:</strong> {{ task.tags.all|join:", " }}
+    </li>
+  </ul>
+  <div class="card-body">
+    <a href="{% url 'tasks:update-task' task.id %}?next={{ request.path }}"
+       class="btn btn-outline-primary">
+      Edite
+    </a>
+    <a href="{% url 'tasks:delete-task' task.id %}?next={{ request.path }}"
+       class="btn btn-outline-danger">
+      Delete
+    </a>
+    {% if task.is_done %}
+      <a href="{% url 'tasks:toggle-task-assign' task.id %}?next={{ request.path }}"
+         class="btn btn-secondary">
+        Undo
+      </a>
+    {% else %}
+      <a href="{% url 'tasks:toggle-task-assign' task.id %}?next={{ request.path }}"
+         class="btn btn-success">
+        Complete
+      </a>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<nav
+    class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white"
+    id="sidenav-main">
+  <div class="scrollbar-inner">
+    <!-- Brand -->
+    <div class="navbar-inner">
+      <!-- Collapse -->
+      <div class="collapse navbar-collapse" id="sidenav-collapse-main">
+        <!-- Nav items -->
+        <ul class="navbar-nav">
+        <li class="nav-item">
+{#              <i class="ni ni-single-02 text-orange"></i>#}
+              <span class="nav-link-text">
+                <strong>Hello, {{ request.user }}!</strong>
+              </span>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'icons' in segment %} active {% endif %}"
+               href="{% url 'tasks:my-tasks' %}">
+              <i class="ni ni-single-02 text-orange"></i>
+              <span class="nav-link-text">My tasks</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if 'tables' in segment %} active {% endif %}"
+               href="{% url 'tasks:tag-list' %}">
+              <i class="ni ni-bullet-list-67 text-default"></i>
+              <span class="nav-link-text">Tags</span>
+            </a>
+          </li>
+        </ul>
+
+        <hr class="my-3">
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <a class="nav-link">
+            <div class="d-flex align-items-center">
+              <i class="ni ni-user-run text-red ml-2"></i>
+              <input class="dropdown-item" type="submit" value="Logout">
+            </div>
+          </a>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
