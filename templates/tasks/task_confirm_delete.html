@@ -30,7 +30,8 @@
                       style="display: flex; justify-content: space-between; align-items: center;">
                     <p>
                       Are you sure you want to delete the task?
-                      <strong>"{{ task.name }}"?</strong>
+                      <br>
+                      <strong>"{{ task.name }}"</strong>
                     </p>
                   </h2>
                 </div>
@@ -39,13 +40,12 @@
                     {% csrf_token %}
                     <button type="submit" class="btn btn-danger">Delete
                     </button>
-                    <a href="{% url 'tasks:project-list' %}"
+                    <a href="{% url 'tasks:my-tasks' %}"
                        class="btn btn-primary">Cancel</a>
                   </form>
                 </div>
               </div>
         </div>
       </div>
-
     </div>
 {% endblock content %}
