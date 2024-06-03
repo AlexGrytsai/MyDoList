@@ -1,0 +1,78 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}My Tags{% endblock title %}
+
+{% block content %}
+
+  <div class="header pb-6 d-flex align-items-center"
+       style="min-height: 300px; background-size: cover; background-position: center top;">
+    <!-- Mask -->
+    <span class="mask bg-gradient-default opacity-8"></span>
+    <div class="container-fluid d-flex align-items-center">
+      <div class="row" style="white-space: nowrap">
+        <div class="col-lg-7 col-md-10">
+          <h1 class="display-2 text-white">
+              My Tags
+          </h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Page content -->
+  <div class="container-fluid mt--9">
+  <div class="row">
+    <div class="col-xl-12 order-xl-1">
+      <div class="card">
+        <div class="card-body">
+          <form>
+            <div class="pl-lg-4">
+              <div class="row">
+                <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-lg-4 col-md-4 d-flex">
+                          <a href="{% url 'tasks:add-tag' %}?next={{ request.path }}"
+                             class="btn btn-success">
+                            Add new Tag
+                          </a>
+                      </div>
+                  </div>
+                </div>
+                {% if tag_list %}
+                  <table class="table table-striped mt-4">
+                    <tr class="text-center">
+                      <th>Tag</th>
+                      <th>Edite</th>
+                      <th>Delete</th>
+                    </tr>
+                    {% for tag in tag_list %}
+                      <tr class="text-center">
+                      <td>{{ tag.name }}</td>
+                      <td>
+                        <a class="link-primary"
+                           href="{% url 'tasks:update-tag' tag.id %}?next={{ request.path }}">
+                          Edite
+                        </a>
+                      </td>
+                      <td>
+                       <a class="link-primary"
+                           href="{% url 'tasks:delete-tag' tag.id %}?next={{ request.path }}">
+                          Delete
+                        </a>
+                      </td>
+                    {% endfor %}
+                    </tr>
+                  </table>
+                {% else %}
+                  <p>There are no tags.</p>
+                {% endif %}
+              </div>
+              <hr class="my-4"/>
+              <div class="text-center mx-auto">
+                {% include 'includes/pagination.html' %}
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
