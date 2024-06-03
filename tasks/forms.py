@@ -11,9 +11,9 @@ class UserRegistrationForm(UserCreationForm):
 
 
 class TaskCreateForm(forms.ModelForm):
-    deadline = forms.DateField(
-        widget=forms.widgets.DateInput(attrs={"type": "date"}),
-        required=False
+    deadline = forms.DateTimeField(
+        widget=forms.widgets.DateTimeInput(attrs={"type": "datetime-local"}),
+        required=False,
     )
 
     tags = forms.ModelMultipleChoiceField(

@@ -1,4 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpRequest, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 
@@ -19,7 +22,9 @@ class TaskListView(LoginRequiredMixin, ListView):
     template_name = "tasks/task_list.html"
 
     def get_queryset(self):
-        return Task.objects.filter(user=self.request.user)
+        return Task.objects.filter(
+            user=self.request.user
+        ).prefetch_related("tags")
 
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
@@ -46,7 +51,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "tasks/task_form.html"
     form_class = TaskCreateForm
 
-    success_url = reverse_lazy("tasks:task-list")
+    success_url = reverse_lazy("tasks:my-tasks")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -59,7 +64,7 @@ class TaskUpdateView(LoginRequiredMixin, UpdateView):
 class TaskDeleteView(LoginRequiredMixin, DeleteView):
     model = Task
     template_name = "tasks/task_confirm_delete.html"
-    success_url = reverse_lazy("tasks:task-list")
+    success_url = reverse_lazy("tasks:my-tasks")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -98,6 +103,7 @@ class TagUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["referer"] = self.request.META.get("HTTP_REFERER")
+        context["is_update"] = True
 
         return context
 
@@ -126,3 +132,18 @@ class TagListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return Tag.objects.filter(user=self.request.user)
+
+
+@login_required
+def complete_task_or_uncompleted(
+        request: HttpRequest,
+        pk: int
+) -> HttpResponseRedirect:
+    task = get_object_or_404(Task, id=pk, user=request.user)
+    task.is_done = not task.is_done
+    task.save()
+
+    next_url = request.GET.get("next")
+    if next_url:
+        return HttpResponseRedirect(next_url)
+    return HttpResponseRedirect(reverse_lazy("tasks:my-tasks"))
